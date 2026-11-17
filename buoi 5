@@ -1,0 +1,164 @@
+package ontap;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+	class Date{
+		int ngay,thang,nam;
+		
+		void nhap(Scanner sc) {
+			System.out.println("nhap ngay thang nam: ");
+			ngay = sc.nextInt();
+			thang = sc.nextInt();
+			nam = sc.nextInt();
+			sc.nextLine();
+		}
+		void in() {
+			System.out.println(ngay + "/" + thang + "/" + nam);
+		}
+	}
+	
+	class KhachHang{
+		String cccd,hten,dchi;
+		double tLeGiam = 0;
+		
+		void nhap(Scanner sc) {
+			System.out.println("CCCD: ");
+			cccd = sc.nextLine();
+			System.out.println("Ho Ten: ");
+			hten = sc.nextLine();
+			System.out.println("Dia chi: ");
+			dchi = sc.nextLine();
+			sc.nextLine();
+		}
+		void in() {
+			System.out.println("Khach hang " + hten + " - " + dchi);
+		}
+	}
+	
+	class KhachHangVIP extends KhachHang{
+		void nhap(Scanner sc) {
+			super.nhap(sc);
+			System.out.println("nhap ti le giam: ");
+			tLeGiam = sc.nextDouble();
+			sc.nextLine();
+		}
+		void in() {
+			super.in();
+			System.out.println("VIP Giam: " + tLeGiam);
+		}
+	}
+	
+	class HangHoa{
+		String mso,ten,nsxuat;
+		 
+		void nhap(Scanner sc) {
+			System.out.println("Ma so: ");
+			mso = sc.nextLine();
+			System.out.println("Ten: ");
+			ten = sc.nextLine();
+			System.out.println("Nha san xuat: ");
+			nsxuat = sc.nextLine();
+			sc.nextLine();
+		}
+		void in() {
+			System.out.println("Ma so" + mso + " " + ten + " " + nsxuat);
+		}
+	}
+	
+	class ChiTiet{
+		HangHoa hang = new HangHoa();
+		int sluong;
+		double dgia;
+		
+		void nhap(Scanner sc) {
+			System.out.println("Nhap so luong: ");
+			sluong = sc.nextInt();
+			System.out.println("nhap don gia: ");
+			dgia = sc.nextDouble();
+			sc.nextLine();
+		}
+		void in() {
+			System.out.println();
+			hang.in();
+			System.out.println("| SL" + sluong + "| DG" +dgia);
+		}
+		double thanhTien() {
+			return sluong*dgia;
+		}
+	}
+	
+	class HoaDon{
+		String mso,tde,nvien;
+		KhachHang kh;
+		Date ngayLap = new Date();
+		ArrayList<ChiTiet>ds = new ArrayList<>();
+		
+		void nhap(Scanner sc) {
+			System.out.println("Ma so: ");
+			mso = sc.nextLine();
+			System.out.println("tieu de: ");
+			tde = sc.nextLine();
+			System.out.println("nhan vien: ");
+			nvien = sc.nextLine();
+			sc.nextLine();
+			
+			System.out.println("Khach vip? (1 = co, 0 = khong): ");
+			int vip = sc.nextInt();
+			sc.nextLine();
+			kh = (vip == 1)? new KhachHangVIP() : new KhachHang();
+			kh.nhap(sc);
+			
+			ngayLap.nhap(sc);
+			
+			System.out.println("so don chi tiet: ");
+			int n = sc.nextInt();
+			sc.nextLine();
+			for(int i = 0; i < n;i++) {
+				System.out.println(" " + (i + 1));
+				ChiTiet ct = new ChiTiet();
+				ct.nhap(sc);
+				ds.add(ct);
+			}
+		}
+		
+		double tong() {
+			int s = 0;
+			for(ChiTiet ct : ds) s+=ct.thanhTien();
+			return s*(1-kh.tLeGiam);
+		}
+		void in() {
+			System.out.println("Ma so" + mso + " " + tde + " " + nvien+ "NGAY");
+			ngayLap.in();
+			System.out.println();
+			kh.in();
+			for(ChiTiet ct : ds) ct.in();
+			System.out.println("TONG" + tong());
+			System.out.println();
+		}
+	}
+	public class nhapkitu{
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("nhap n: ");
+		int n = sc.nextInt();
+		sc.nextLine();
+		
+		ArrayList<HoaDon>ds = new ArrayList<>();
+		for(int i = 0; i < n; i++) {
+			System.out.println("nhap hoa don: " +(i + 1));
+			HoaDon hd = new HoaDon();
+			hd.nhap(sc);
+			ds.add(hd);
+		}
+		
+		System.out.println("Hoas don tren 1 trieu");
+		for(HoaDon hd : ds)
+			if(hd.tong() > 1000000) hd.in();
+		System.out.println("20/05/2022");
+		for(HoaDon hd : ds)
+			if(hd.ngayLap.ngay == 20 && hd.ngayLap.thang == 5 && hd.ngayLap.nam==2022)
+				System.out.println(hd.kh.hten);
+	}
+}
